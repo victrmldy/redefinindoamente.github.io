@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Como identificar conteúdo manipulatório nas redes — Redefinindo a Mente</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a12; --bg2: #10101e; --surface: #16162a;
+    --accent: #7c5cfc; --accent2: #c084fc; --danger: #f87171;
+    --muted: #6b6b8a; --text: #e8e8f0; --text2: #a0a0c0;
+    --border: rgba(124,92,252,0.18);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; overflow-x: hidden; }
+
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(10,10,18,0.85); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.1rem; color: var(--accent2); text-decoration: none; }
+  .nav-back { text-decoration: none; color: var(--text2); font-size: 0.88rem; font-weight: 500; letter-spacing: 0.04em; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
+  .nav-back:hover { color: var(--accent2); }
+
+  .hero {
+    min-height: 52vh; display: flex; align-items: flex-end;
+    padding: 8rem 2rem 4rem; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(124,92,252,0.2) 0%, transparent 70%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(124,92,252,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(124,92,252,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 0%, transparent 100%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 760px; }
+  .post-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .post-cat { display: inline-block; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(124,92,252,0.35); padding: 0.3rem 0.9rem; border-radius: 999px; }
+  .post-date { color: var(--muted); font-size: 0.82rem; }
+
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1.2rem; }
+  .hero-lead { color: var(--text2); font-size: 1.1rem; font-weight: 300; max-width: 600px; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 0 2rem; }
+
+  .article-body { padding: 5rem 2rem; position: relative; z-index: 1; }
+
+  .article-body h2 {
+    font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700;
+    margin: 3rem 0 1rem; letter-spacing: -0.01em;
+  }
+  .article-body p { color: var(--text2); margin-bottom: 1.3rem; font-weight: 300; font-size: 1rem; }
+  .article-body strong { color: var(--text); font-weight: 500; }
+
+  .step-list { list-style: none; display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0; }
+  .step-item { display: flex; gap: 1.2rem; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+  .step-num { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 0.82rem; font-weight: 500; color: #fff; flex-shrink: 0; }
+  .step-content h3 { font-size: 1rem; font-weight: 500; margin-bottom: 0.4rem; }
+  .step-content p { color: var(--text2); font-size: 0.9rem; margin: 0; }
+
+  .callout { background: rgba(124,92,252,0.08); border: 1px solid rgba(124,92,252,0.25); border-left: 3px solid var(--accent); border-radius: 10px; padding: 1.5rem; margin: 2rem 0; }
+  .callout p { margin: 0; color: var(--text2); font-size: 0.95rem; }
+  .callout strong { color: var(--accent2); }
+
+  .warning { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); border-left: 3px solid var(--danger); border-radius: 10px; padding: 1.5rem; margin: 2rem 0; }
+  .warning p { margin: 0; color: var(--text2); font-size: 0.95rem; }
+  .warning strong { color: var(--danger); }
+
+  .back-link { display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--accent); font-size: 0.9rem; font-weight: 500; margin-top: 3rem; transition: color 0.2s; }
+  .back-link:hover { color: var(--accent2); }
+
+  footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  footer span { color: var(--accent2); font-family: 'Playfair Display', serif; font-style: italic; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="redefinindo-a-mente.html" class="nav-logo">Redefinindo a Mente</a>
+  <a href="redefinindo-a-mente.html#postagens" class="nav-back">← Voltar às postagens</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content container" style="padding-left:0;padding-right:0">
+    <div class="post-meta">
+      <span class="post-cat">Tutorial</span>
+      <span class="post-date">Projeto de Extensão · Redefinindo a Mente</span>
+    </div>
+    <h1>Como identificar conteúdo manipulatório nas redes</h1>
+    <p class="hero-lead">Dicas práticas para reconhecer desinformação, clickbait e padrões que exploram suas emoções — antes que eles te controlem.</p>
+  </div>
+</section>
+
+<div class="article-body">
+  <div class="container">
+
+    <p class="reveal">As redes sociais são projetadas para manter você rolando a tela. Algoritmos aprendem o que te faz parar — e frequentemente é conteúdo que provoca reação emocional intensa: raiva, medo, admiração ou indignação. Entender esse mecanismo é o primeiro passo para navegar de forma mais consciente.</p>
+
+    <div class="callout reveal">
+      <p><strong>Por que isso importa?</strong> Conteúdos manipulatórios não são apenas "notícias falsas". São textos, imagens e vídeos criados para gerar uma reação específica — muitas vezes sem se preocupar com a verdade. Reconhecê-los é uma habilidade essencial no mundo atual.</p>
+    </div>
+
+    <h2 class="reveal">Os sinais mais comuns</h2>
+
+    <ul class="step-list reveal">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Título exagerado ou apelativo</h3>
+          <p>Títulos que usam palavras como "CHOCANTE", "URGENTE", "O que a mídia esconde" são desenhados para provocar cliques por impulso emocional, não por interesse genuíno na informação.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Ausência de fonte confiável</h3>
+          <p>A informação não cita de onde vem? Nenhum nome de autor, nenhum link para pesquisa, nenhum veículo identificado? Desconfie. Informação séria sempre pode ser rastreada até sua origem.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Provoca reação emocional imediata e intensa</h3>
+          <p>Sentiu raiva, medo ou indignação muito fortes de repente? Antes de compartilhar, respire. Conteúdos manipulatórios são construídos exatamente para criar esse impulso de agir sem pensar.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Imagens fora de contexto</h3>
+          <p>Uma foto real pode ser usada com uma legenda completamente falsa. Pesquise a imagem no Google Imagens para ver onde ela apareceu originalmente antes de acreditar na narrativa que a acompanha.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Confirma exatamente o que você já acredita</h3>
+          <p>Conteúdo que parece confirmar perfeitamente sua visão de mundo merece atenção extra. Algoritmos entregam o que engaja — e o que mais engaja é o que confirma crenças já existentes.</p>
+        </div>
+      </li>
+    </ul>
+
+    <h2 class="reveal">O que fazer quando tiver dúvida</h2>
+
+    <p class="reveal">Antes de compartilhar qualquer conteúdo, faça estas perguntas simples:</p>
+
+    <ul class="step-list reveal">
+      <li class="step-item">
+        <div class="step-num">✓</div>
+        <div class="step-content">
+          <h3>Pesquise em outros veículos</h3>
+          <p>Se a notícia é verdadeira e importante, outros veículos também vão cobrir. Se só aparece em um lugar obscuro, desconfie.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">✓</div>
+        <div class="step-content">
+          <h3>Consulte agências de checagem</h3>
+          <p>No Brasil, sites como Agência Lupa, Aos Fatos e o Boatos.org verificam as informações que circulam. Use-os antes de repassar algo duvidoso.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">✓</div>
+        <div class="step-content">
+          <h3>Espere antes de compartilhar</h3>
+          <p>A urgência é uma armadilha. Conteúdos manipulatórios constroem a sensação de que você precisa agir agora. Esperar algumas horas frequentemente resolve a dúvida.</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="warning reveal">
+      <p><strong>Atenção:</strong> Compartilhar desinformação mesmo sem má intenção contribui para o problema. A responsabilidade de verificar antes de passar adiante é de quem compartilha — não apenas de quem criou o conteúdo.</p>
+    </div>
+
+    <p class="reveal">Desenvolver esse olhar crítico não é desconfiar de tudo — é ter o hábito de perguntar <strong>"de onde vem isso?"</strong> antes de aceitar ou repassar. É uma habilidade que se treina, e quanto mais cedo se começa, mais natural ela se torna.</p>
+
+    <a href="redefinindo-a-mente.html#postagens" class="back-link reveal">← Voltar para as postagens</a>
+  </div>
+</div>
+
+<footer>
+  <p>Projeto de Extensão &nbsp;·&nbsp; <span>Redefinindo a Mente</span> &nbsp;·&nbsp; Ensino Médio e Saúde Mental Digital</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 60);
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

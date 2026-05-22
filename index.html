@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redefinindo a Mente</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a12;
+    --bg2: #10101e;
+    --surface: #16162a;
+    --accent: #7c5cfc;
+    --accent2: #c084fc;
+    --danger: #f87171;
+    --muted: #6b6b8a;
+    --text: #e8e8f0;
+    --text2: #a0a0c0;
+    --border: rgba(124,92,252,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(10,10,18,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--accent2);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text2);
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent2); }
+
+  /* HERO */
+  #inicio {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 8rem 2rem 4rem;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 30%, rgba(124,92,252,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 80%, rgba(192,132,252,0.1) 0%, transparent 60%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,92,252,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,92,252,0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%);
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 780px; }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(124,92,252,0.35);
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+
+  .hero-title span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--text2);
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    gap: 1rem;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 24px rgba(124,92,252,0.35);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent2);
+    transform: translateY(-2px);
+    box-shadow: 0 0 36px rgba(192,132,252,0.4);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover { color: var(--text); border-color: rgba(124,92,252,0.4); }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    animation: fadeUp 1s ease 0.8s both;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 1.6s ease-in-out infinite;
+  }
+
+  /* SECTIONS */
+  section { position: relative; z-index: 1; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .section-desc {
+    color: var(--text2);
+    font-size: 1rem;
+    max-width: 560px;
+    font-weight: 300;
+  }
+
+  /* SOBRE */
+  #sobre {
+    padding: 8rem 2rem;
+  }
+
+  .sobre-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    margin-top: 4rem;
+  }
+
+  .sobre-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 380px;
+  }
+
+  .circle-outer {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 1px solid rgba(124,92,252,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: rotateSlow 18s linear infinite;
+    position: relative;
+  }
+
+  .circle-inner {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, rgba(124,92,252,0.3), rgba(10,10,18,0.9));
+    border: 1px solid rgba(192,132,252,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: rotateSlow 18s linear infinite reverse;
+  }
+
+  .circle-dot {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    background: var(--accent2);
+    border-radius: 50%;
+    box-shadow: 0 0 16px var(--accent2);
+  }
+
+  .circle-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: rotateSlow 18s linear infinite;
+  }
+
+  .sobre-text p {
+    color: var(--text2);
+    margin-bottom: 1.2rem;
+    font-weight: 300;
+    font-size: 1rem;
+  }
+
+  .sobre-text strong { color: var(--text); font-weight: 500; }
+
+  /* PROBLEMA */
+  #problema {
+    padding: 8rem 2rem;
+    background: linear-gradient(to bottom, var(--bg), var(--bg2), var(--bg));
+  }
+
+  .problema-header { text-align: center; margin-bottom: 4rem; }
+  .problema-header .section-desc { margin: 0 auto; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .stat-card:hover {
+    border-color: rgba(124,92,252,0.5);
+    transform: translateY(-4px);
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    color: var(--text2);
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .causes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .cause-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.8rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .cause-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .cause-card.danger::before {
+    background: linear-gradient(90deg, var(--danger), #fb923c);
+  }
+
+  .cause-card:hover { border-color: rgba(124,92,252,0.4); }
+
+  .cause-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .cause-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+
+  .cause-desc {
+    color: var(--text2);
+    font-size: 0.88rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* PÚBLICO */
+  #publico {
+    padding: 8rem 2rem;
+  }
+
+  #publico > .container > .reveal:first-child {
+    text-align: center;
+  }
+
+  #publico .section-desc {
+    margin: 0 auto;
+  }
+
+  .publico-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 4rem;
+    align-items: start;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .publico-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+  }
+
+  .publico-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tag {
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    background: rgba(124,92,252,0.12);
+    border: 1px solid rgba(124,92,252,0.25);
+    color: var(--accent2);
+  }
+
+  .pain-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pain-item {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    font-size: 0.92rem;
+    color: var(--text2);
+    font-weight: 300;
+  }
+
+  .pain-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--danger);
+    margin-top: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  /* POSTAGENS */
+  #postagens {
+    padding: 8rem 2rem;
+    background: linear-gradient(to bottom, var(--bg), var(--bg2), var(--bg));
+  }
+
+  .postagens-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .post-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+
+  .post-card:hover {
+    border-color: rgba(124,92,252,0.5);
+    transform: translateY(-4px);
+  }
+
+  .post-thumb {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .post-thumb.purple { background: linear-gradient(135deg, rgba(124,92,252,0.3), rgba(192,132,252,0.15)); }
+  .post-thumb.red    { background: linear-gradient(135deg, rgba(248,113,113,0.25), rgba(251,146,60,0.15)); }
+  .post-thumb.blue   { background: linear-gradient(135deg, rgba(96,165,250,0.25), rgba(124,92,252,0.15)); }
+
+  .post-body { padding: 1.5rem; }
+
+  .post-category {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .post-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    line-height: 1.35;
+  }
+
+  .post-excerpt {
+    color: var(--text2);
+    font-size: 0.85rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* LINKS */
+  #links {
+    padding: 8rem 2rem;
+  }
+
+  #links > .container > .reveal:first-child {
+    text-align: center;
+  }
+
+  #links .section-desc {
+    margin: 0 auto;
+  }
+
+  .links-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .link-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.8rem;
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    transition: border-color 0.3s, transform 0.3s;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .link-card:hover {
+    border-color: rgba(124,92,252,0.5);
+    transform: translateY(-3px);
+  }
+
+  .link-type {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(124,92,252,0.15);
+    border: 1px solid rgba(124,92,252,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .link-info h4 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+
+  .link-info p {
+    color: var(--text2);
+    font-size: 0.83rem;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  footer span {
+    color: var(--accent2);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes rotateSlow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50%       { opacity: 1;   transform: scaleY(1.15); }
+  }
+
+  /* REVEAL ON SCROLL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .sobre-grid, .publico-grid { grid-template-columns: 1fr; }
+    .stats-row, .causes-grid, .posts-grid { grid-template-columns: 1fr; }
+    .links-grid { grid-template-columns: 1fr; }
+    .postagens-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .sobre-visual { height: 260px; }
+    .circle-outer { width: 220px; height: 220px; }
+    .circle-inner { width: 160px; height: 160px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Redefinindo a Mente</div>
+  <ul class="nav-links">
+    <li><a href="#inicio">Início</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#problema">O Problema</a></li>
+    <li><a href="#postagens">Postagens</a></li>
+    <li><a href="#publico">Público</a></li>
+    <li><a href="#links">Links Úteis</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Projeto de Extensão</div>
+    <h1 class="hero-title">Redefinindo<br><span>a Mente</span></h1>
+    <p class="hero-sub">Você já se sentiu pior a respeito de si mesmo depois de passar um tempo no Instagram ou TikTok?</p>
+    <div class="hero-cta">
+      <a href="#sobre" class="btn btn-primary">Conheça o projeto</a>
+      <a href="#problema" class="btn btn-ghost">Ver o problema</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    rolar
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="container">
+    <div class="sobre-grid">
+      <div class="sobre-visual">
+        <div class="circle-outer">
+          <div class="circle-dot"></div>
+          <div class="circle-inner">
+            <div class="circle-text">Mente<br>Crítica</div>
+          </div>
+        </div>
+      </div>
+      <div class="sobre-text reveal">
+        <p class="section-label">Sobre o projeto</p>
+        <h2 class="section-title">O que é o<br>Redefinindo a Mente?</h2>
+        <p>É um <strong>projeto de extensão</strong> que busca despertar, nos adolescentes, uma consciência crítica sobre o impacto das redes sociais no dia a dia — especialmente na saúde mental e na percepção de realidade.</p>
+        <p>Em um mundo hiperconectado, onde informações circulam sem filtro e algoritmos moldam comportamentos, entender <strong>os limites entre o virtual e o real</strong> se tornou uma habilidade essencial.</p>
+        <p>O projeto leva esse debate para dentro das escolas, onde ele mais precisa acontecer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMA -->
+<section id="problema">
+  <div class="container">
+    <div class="problema-header reveal">
+      <p class="section-label">O Problema</p>
+      <h2 class="section-title">Por que isso é urgente?</h2>
+      <p class="section-desc">Crianças e adolescentes estão expostos a conteúdos sem qualquer filtro. As consequências são invisíveis — mas profundas.</p>
+    </div>
+
+    <div class="stats-row reveal">
+      <div class="stat-card">
+        <div class="stat-num">3h+</div>
+        <div class="stat-label">Tempo médio diário de adolescentes em redes sociais</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">↑70%</div>
+        <div class="stat-label">Aumento de casos de ansiedade em jovens na última década</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1 em 4</div>
+        <div class="stat-label">Adolescentes relatam já ter visto conteúdo prejudicial online</div>
+      </div>
+    </div>
+
+    <div class="causes-grid reveal">
+      <div class="cause-card">
+        <div class="cause-icon">📡</div>
+        <div class="cause-title">Redes sem regulamentação</div>
+        <p class="cause-desc">Plataformas digitais operam sem estrutura clara de proteção ao usuário jovem, expondo-o a conteúdos extremos e manipulatórios.</p>
+      </div>
+      <div class="cause-card">
+        <div class="cause-icon">🧠</div>
+        <div class="cause-title">Falta de compreensão</div>
+        <p class="cause-desc">Pais, professores e a própria comunidade ainda não entendem a dimensão do problema — e por isso não agem.</p>
+      </div>
+      <div class="cause-card danger">
+        <div class="cause-icon">⚠️</div>
+        <div class="cause-title">Consequência: manipulação</div>
+        <p class="cause-desc">Uma geração exposta sem preparo torna-se vulnerável à desinformação, padrões irreais e influências negativas sobre identidade e autoestima.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POSTAGENS -->
+<section id="postagens">
+  <div class="container">
+    <div class="postagens-header reveal">
+      <div>
+        <p class="section-label">Postagens</p>
+        <h2 class="section-title">Conteúdo do projeto</h2>
+      </div>
+    </div>
+    <div class="posts-grid" style="grid-template-columns:repeat(2,1fr);max-width:780px;margin:0 auto;">
+      <a href="post-tutorial.html" class="post-card reveal" style="text-decoration:none;color:inherit;">
+        <div class="post-thumb purple">🧩</div>
+        <div class="post-body">
+          <p class="post-category">Tutorial</p>
+          <h3 class="post-title">Como identificar conteúdo manipulatório nas redes</h3>
+          <p class="post-excerpt">Dicas práticas para reconhecer desinformação, clickbait e padrões que exploram emoções.</p>
+        </div>
+      </a>
+      <a href="post-analise.html" class="post-card reveal" style="text-decoration:none;color:inherit;">
+        <div class="post-thumb red">💬</div>
+        <div class="post-body">
+          <p class="post-category">Análise</p>
+          <h3 class="post-title">Redes sociais e autoestima: qual a conexão?</h3>
+          <p class="post-excerpt">Uma análise aprofundada de como algoritmos e comparações sociais afetam a imagem que os jovens têm de si mesmos.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PÚBLICO -->
+<section id="publico">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">Público-alvo</p>
+      <h2 class="section-title">Para quem falamos?</h2>
+      <p class="section-desc">O projeto é desenhado para os adolescentes do ensino médio e os professores que os acompanham.</p>
+    </div>
+
+    <div class="publico-grid">
+      <div class="publico-card reveal">
+        <h3>🧑‍🎓 Alunos do ensino médio</h3>
+        <div class="tag-list">
+          <span class="tag">Comunicativo</span>
+          <span class="tag">Curioso</span>
+          <span class="tag">Habituado à tecnologia</span>
+          <span class="tag">Busca identidade</span>
+        </div>
+        <ul class="pain-list">
+          <li class="pain-item">
+            <span class="pain-dot"></span>
+            Dificuldade em separar a vida virtual da vida real
+          </li>
+          <li class="pain-item">
+            <span class="pain-dot"></span>
+            Forte busca por autoconhecimento — fase inicial da vida
+          </li>
+          <li class="pain-item">
+            <span class="pain-dot"></span>
+            Exposição constante a conteúdos não filtrados
+          </li>
+          <li class="pain-item">
+            <span class="pain-dot"></span>
+            Saúde mental raramente levada a sério pela comunidade
+          </li>
+        </ul>
+      </div>
+      <div class="publico-card reveal">
+        <h3>👩‍🏫 Professores</h3>
+        <div class="tag-list">
+          <span class="tag">Referência na escola</span>
+          <span class="tag">Formadores de opinião</span>
+          <span class="tag">Mediadores</span>
+        </div>
+        <ul class="pain-list">
+          <li class="pain-item">
+            <span class="pain-dot"></span>
+            Precisam de ferramentas para abordar saúde mental em sala
+          </li>
+          <li class="pain-item">
+            <span class="pain-dot"></span>
+            Observam os efeitos, mas nem sempre sabem como agir
+          </li>
+          <li class="pain-item">
+            <span class="pain-dot"></span>
+            Podem ser multiplicadores do conhecimento gerado pelo projeto
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LINKS ÚTEIS -->
+<section id="links">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">Links úteis</p>
+      <h2 class="section-title">Referências e recursos</h2>
+      <p class="section-desc">Artigos, vídeos e materiais selecionados para aprofundar o tema.</p>
+    </div>
+    <div class="links-grid">
+      <a href="https://www.paho.org/pt/topicos/saude-mental-dos-adolescentes" target="_blank" rel="noopener" class="link-card reveal">
+        <div class="link-type">📄</div>
+        <div class="link-info">
+          <h4>OMS/OPAS: Saúde mental de adolescentes</h4>
+          <p>Dados e orientações da Organização Mundial da Saúde sobre saúde mental na adolescência — incluindo fatores de risco e intervenções recomendadas.</p>
+        </div>
+      </a>
+      <a href="https://www.netflix.com/title/81254224" target="_blank" rel="noopener" class="link-card reveal">
+        <div class="link-type">🎬</div>
+        <div class="link-info">
+          <h4>Documentário: O Dilema das Redes</h4>
+          <p>Netflix. Entrevistas com ex-funcionários das maiores plataformas digitais sobre os impactos dos algoritmos na saúde mental e na democracia.</p>
+        </div>
+      </a>
+      <a href="https://www.unicef.org/brazil/topics/tecnologia-digital" target="_blank" rel="noopener" class="link-card reveal">
+        <div class="link-type">📊</div>
+        <div class="link-info">
+          <h4>UNICEF Brasil: Tecnologia digital</h4>
+          <p>Relatórios e iniciativas do UNICEF sobre o impacto da tecnologia na vida de crianças e adolescentes brasileiros.</p>
+        </div>
+      </a>
+      <a href="https://www.revistas.usp.br/comueduc/article/view/214328" target="_blank" rel="noopener" class="link-card reveal">
+        <div class="link-type">📖</div>
+        <div class="link-info">
+          <h4>Artigo USP: Alfabetização midiática nas escolas</h4>
+          <p>Pesquisa da Universidade de São Paulo sobre como desenvolver pensamento crítico frente à desinformação e à violência digital nas escolas brasileiras.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Projeto de Extensão &nbsp;·&nbsp; <span>Redefinindo a Mente</span> &nbsp;·&nbsp; Ensino Médio e Saúde Mental Digital</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

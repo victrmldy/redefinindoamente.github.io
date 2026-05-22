@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redes sociais e autoestima — Redefinindo a Mente</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a12; --bg2: #10101e; --surface: #16162a;
+    --accent: #7c5cfc; --accent2: #c084fc; --danger: #f87171;
+    --muted: #6b6b8a; --text: #e8e8f0; --text2: #a0a0c0;
+    --border: rgba(124,92,252,0.18);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; overflow-x: hidden; }
+
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(10,10,18,0.85); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.1rem; color: var(--accent2); text-decoration: none; }
+  .nav-back { text-decoration: none; color: var(--text2); font-size: 0.88rem; font-weight: 500; letter-spacing: 0.04em; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
+  .nav-back:hover { color: var(--accent2); }
+
+  .hero {
+    min-height: 52vh; display: flex; align-items: flex-end;
+    padding: 8rem 2rem 4rem; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(192,132,252,0.18) 0%, transparent 70%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(124,92,252,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(124,92,252,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 0%, transparent 100%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 760px; }
+  .post-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .post-cat { display: inline-block; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--danger); border: 1px solid rgba(248,113,113,0.35); padding: 0.3rem 0.9rem; border-radius: 999px; }
+  .post-date { color: var(--muted); font-size: 0.82rem; }
+
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1.2rem; }
+  .hero-lead { color: var(--text2); font-size: 1.1rem; font-weight: 300; max-width: 600px; }
+
+  .container { max-width: 760px; margin: 0 auto; padding: 0 2rem; }
+
+  .article-body { padding: 5rem 2rem; position: relative; z-index: 1; }
+
+  .article-body h2 {
+    font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700;
+    margin: 3rem 0 1rem; letter-spacing: -0.01em;
+  }
+  .article-body p { color: var(--text2); margin-bottom: 1.3rem; font-weight: 300; font-size: 1rem; }
+  .article-body strong { color: var(--text); font-weight: 500; }
+
+  .quote-block {
+    border-left: 3px solid var(--accent2); padding: 1.2rem 1.8rem;
+    margin: 2rem 0; background: rgba(192,132,252,0.06); border-radius: 0 10px 10px 0;
+  }
+  .quote-block p { font-style: italic; color: var(--text); font-size: 1.05rem; margin: 0 0 0.5rem; }
+  .quote-block cite { font-size: 0.8rem; color: var(--muted); font-style: normal; }
+
+  .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+  .concept-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem; }
+  .concept-card h3 { font-size: 0.92rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--accent2); }
+  .concept-card p { font-size: 0.87rem; color: var(--text2); margin: 0; }
+
+  .callout { background: rgba(124,92,252,0.08); border: 1px solid rgba(124,92,252,0.25); border-left: 3px solid var(--accent); border-radius: 10px; padding: 1.5rem; margin: 2rem 0; }
+  .callout p { margin: 0; color: var(--text2); font-size: 0.95rem; }
+  .callout strong { color: var(--accent2); }
+
+  .tips-list { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; margin: 1.5rem 0; }
+  .tip-item { display: flex; gap: 0.8rem; align-items: flex-start; font-size: 0.95rem; color: var(--text2); }
+  .tip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 0.6rem; flex-shrink: 0; }
+
+  .back-link { display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--accent); font-size: 0.9rem; font-weight: 500; margin-top: 3rem; transition: color 0.2s; }
+  .back-link:hover { color: var(--accent2); }
+
+  footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  footer span { color: var(--accent2); font-family: 'Playfair Display', serif; font-style: italic; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 600px) {
+    nav { padding: 1rem 1.5rem; }
+    .concept-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="redefinindo-a-mente.html" class="nav-logo">Redefinindo a Mente</a>
+  <a href="redefinindo-a-mente.html#postagens" class="nav-back">← Voltar às postagens</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content container" style="padding-left:0;padding-right:0">
+    <div class="post-meta">
+      <span class="post-cat">Análise</span>
+      <span class="post-date">Projeto de Extensão · Redefinindo a Mente</span>
+    </div>
+    <h1>Redes sociais e autoestima: qual a conexão?</h1>
+    <p class="hero-lead">Como algoritmos e comparações sociais afetam a imagem que os jovens constroem de si mesmos — e o que podemos fazer sobre isso.</p>
+  </div>
+</section>
+
+<div class="article-body">
+  <div class="container">
+
+    <p class="reveal">Você já se sentiu pior a respeito de si mesmo depois de passar um tempo no Instagram ou TikTok? Essa sensação não é coincidência. Há uma relação documentada entre o uso intenso de redes sociais e a queda da autoestima — especialmente entre adolescentes, que ainda estão construindo sua identidade.</p>
+
+    <h2 class="reveal">O mecanismo da comparação social</h2>
+
+    <p class="reveal">Comparar-se com outras pessoas é um comportamento humano antigo. O problema é que as redes sociais amplificam esse processo de uma forma sem precedentes: agora nos comparamos <strong>constantemente</strong>, com centenas ou milhares de pessoas ao mesmo tempo, que apresentam versões editadas e selecionadas de suas vidas.</p>
+
+    <div class="quote-block reveal">
+      <p>"As pessoas compartilham os melhores momentos, os corpos mais trabalhados, as viagens mais bonitas. Raramente compartilham as manhãs difíceis, as inseguranças ou os fracassos."</p>
+      <cite>— Dinâmica central do problema identificado no projeto</cite>
+    </div>
+
+    <p class="reveal">Quando você vê apenas os destaques da vida dos outros, é fácil concluir que sua própria vida está aquém. Que você não é suficientemente bonito, bem-sucedido, engraçado ou interessante. Mas você está comparando sua vida inteira com o resumo curado da vida do outro.</p>
+
+    <h2 class="reveal">Os dois mecanismos principais</h2>
+
+    <div class="concept-grid reveal">
+      <div class="concept-card">
+        <h3>Comparação ascendente</h3>
+        <p>Você se compara com pessoas que parecem estar "acima" de você em algum aspecto — mais bonitas, mais populares, mais talentosas. Isso tende a gerar sentimentos de inadequação e inveja.</p>
+      </div>
+      <div class="concept-card">
+        <h3>Validação por curtidas</h3>
+        <p>O número de curtidas e comentários se torna uma medida de valor pessoal. Pouca interação em uma postagem pode provocar a sensação de rejeição — mesmo que seja apenas um algoritmo decidindo quem vê o quê.</p>
+      </div>
+      <div class="concept-card">
+        <h3>FOMO (medo de ficar de fora)</h3>
+        <p>Ver fotos de eventos, encontros e festas dos quais você não participou gera ansiedade e a sensação de estar sendo excluído — mesmo que isso não seja real.</p>
+      </div>
+      <div class="concept-card">
+        <h3>Padrões irreais de corpo</h3>
+        <p>Filtros, edição e iluminação criam corpos que não existem na realidade. A exposição constante a esses padrões distorce a percepção do que é normal e saudável.</p>
+      </div>
+    </div>
+
+    <h2 class="reveal">O papel do algoritmo nisso tudo</h2>
+
+    <p class="reveal">Os algoritmos das redes sociais não são neutros. Eles aprendem o que te mantém na tela por mais tempo — e frequentemente isso é conteúdo que provoca reação emocional intensa. Conteúdos que geram inveja, comparação ou insegurança tendem a ter alto engajamento. O resultado é que o algoritmo te entrega mais deles.</p>
+
+    <div class="callout reveal">
+      <p><strong>Um dado importante:</strong> Estudos indicam que adolescentes que usam redes sociais por mais de 3 horas diárias têm probabilidade significativamente maior de desenvolver sintomas de ansiedade e depressão. O impacto é maior em meninas — possivelmente por causa da pressão maior em torno da aparência física.</p>
+    </div>
+
+    <h2 class="reveal">O que fazer: caminhos práticos</h2>
+
+    <p class="reveal">Não se trata de abandonar as redes sociais — mas de ter uma relação mais consciente com elas.</p>
+
+    <ul class="tips-list reveal">
+      <li class="tip-item"><span class="tip-dot"></span>Cuide do que você segue: deixe de seguir perfis que consistentemente te fazem se sentir pior. Você controla o que aparece no seu feed.</li>
+      <li class="tip-item"><span class="tip-dot"></span>Lembre que você está vendo um recorte: por trás de toda foto "perfeita" há uma vida comum, com problemas e inseguranças iguais aos seus.</li>
+      <li class="tip-item"><span class="tip-dot"></span>Estabeleça limites de tempo: use os recursos de controle de tempo dos próprios aplicativos. Consciência do quanto você usa já muda o comportamento.</li>
+      <li class="tip-item"><span class="tip-dot"></span>Evite redes sociais antes de dormir: o conteúdo consumido antes de dormir tende a permanecer na mente. Comparações noturnas afetam diretamente o sono e o humor do dia seguinte.</li>
+      <li class="tip-item"><span class="tip-dot"></span>Converse sobre o que você sente: se comparações nas redes estão afetando sua autoestima, falar com alguém de confiança — amigo, familiar ou psicólogo — faz diferença real.</li>
+    </ul>
+
+    <p class="reveal">A autoestima saudável não vem do número de curtidas. Ela vem do autoconhecimento, das relações genuínas e da percepção realista de quem você é — com qualidades e limitações. Nenhum algoritmo pode te dar isso.</p>
+
+    <a href="redefinindo-a-mente.html#postagens" class="back-link reveal">← Voltar para as postagens</a>
+  </div>
+</div>
+
+<footer>
+  <p>Projeto de Extensão &nbsp;·&nbsp; <span>Redefinindo a Mente</span> &nbsp;·&nbsp; Ensino Médio e Saúde Mental Digital</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 60);
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
